@@ -44,3 +44,60 @@ income_tx |>
     plot.caption = element_text(hjust = 0.5)
   )
 ```
+
+```{r}
+#| message: false
+#| cache: true
+edu_state <- get_acs(
+  geography = "state",
+  variables = c(
+    "B15003_001",
+    "B15003_022",
+    "B15003_023",
+    "B15003_024",
+    "B15003_025"
+  ),
+  year = 2020,
+  summary_var = "B15003_001"
+)
+```
+
+```{r}
+edu_state |>
+  group_by(NAME) |>
+  summarise(
+    total = first(summary_est),
+    bachelors_plus = sum(estimate[variable %in% c("B15003_022", "B15003_023", "B15003_024", "B15003_025")]),
+    pct_bachelors_plus = bachelors_plus / total * 100,
+    .groups = "drop"
+  ) |>
+  arrange(desc(pct_bachelors_plus)) |>
+  mutate(NAME = forcats::fct_inorder(NAME)) |>
+  ggplot(aes(x = pct_bachelors_plus, y = NAME)) +
+  geom_col(fill = "steelblue") +
+  scale_x_continuous(
+    labels = scales::label_percent(scale = 1),
+    limits = c(0, max(edu_state |>
+      group_by(NAME) |>
+      summarise(
+        total = first(summary_est),
+        bachelors_plus = sum(estimate[variable %in% c("B15003_022", "B15003_023", "B15003_024", "B15003_025")]),
+        pct_bachelors_plus = bachelors_plus / total * 100,
+        .groups = "drop"
+      ) |>
+      pull(pct_bachelors_plus)) + 5)
+  ) +
+  labs(
+    x = "Adults with at least a bachelor's degree",
+    y = "State",
+    title = "Bachelor's-or-higher percentage by state, 2020",
+    caption = "Data source: U.S. Census Bureau, American Community Survey (ACS) 5-year estimates, 2020"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    plot.caption = element_text(hjust = 0.5)
+  )
+```
+
