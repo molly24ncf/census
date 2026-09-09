@@ -1,18 +1,18 @@
----
-title: "Analyzing US Census Data"
-author: "molly24ncf"
-execute:
-  echo: false
----
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
+#
 #| message: false
 library(tidyverse)
 library(tidycensus)
 library(sf)
-```
-
-```{r}
+#
+#
+#
 #| message: false
 income_tx <- get_acs(
   geography = "county",
@@ -22,9 +22,9 @@ income_tx <- get_acs(
   geometry = TRUE,
   output = "wide"
 )
-```
-
-```{r}
+#
+#
+#
 income_tx |>
   ggplot(aes(fill = B19013_001E)) +
   geom_sf(color = "white", linewidth = 0.2) +
@@ -43,9 +43,9 @@ income_tx |>
     legend.title = element_text(face = "bold"),
     plot.caption = element_text(hjust = 0.5)
   )
-```
-
-```{r}
+#
+#
+#
 #| message: false
 #| cache: true
 edu_state <- get_acs(
@@ -60,9 +60,9 @@ edu_state <- get_acs(
   year = 2020,
   summary_var = "B15003_001"
 )
-```
-
-```{r}
+#
+#
+#
 edu_state |>
   group_by(NAME) |>
   summarise(
@@ -99,9 +99,9 @@ edu_state |>
     axis.title = element_text(face = "bold"),
     plot.caption = element_text(hjust = 0.5)
   )
-```
-
-```{r}
+#
+#
+#
 #| message: false
 age_ca <- get_acs(
   geography = "county",
@@ -113,44 +113,12 @@ age_ca <- get_acs(
   year = 2020,
   geometry = FALSE
 )
-```
-
-```{r}
-top_counties <- age_ca |>
-  select(-moe) |>
-  pivot_wider(
-    names_from = variable,
-    values_from = estimate
-  ) |>
-  slice_max(population, n = 5)
-
-age_ca |>
-  select(-moe) |>
-  pivot_wider(
-    names_from = variable,
-    values_from = estimate
-  ) |>
-  ggplot(aes(x = median_age, y = population)) +
-  geom_point(alpha = 0.7, color = "steelblue") +
-  geom_text(
-    data = top_counties,
-    aes(label = NAME),
-    color = "black",
-    size = 3,
-    hjust = -0.05,
-    vjust = 0.5
-  ) +
-  scale_y_log10(labels = scales::label_comma()) +
-  labs(
-    x = "Median age (years)",
-    y = "Population (log scale)",
-    title = "Population versus median age for California counties, 2020",
-    caption = "Data source: U.S. Census Bureau, American Community Survey (ACS) 5-year estimates, 2020"
-  ) +
-  theme_minimal(base_size = 12) +
-  theme(
-    plot.title = element_text(face = "bold"),
-    plot.caption = element_text(hjust = 0.5)
-  )
-```
-
+#
+#
+#
+age_ca
+#
+#
+#
+#
+#
